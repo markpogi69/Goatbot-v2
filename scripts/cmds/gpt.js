@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 // config 
-const apiKey = "";
+const apiKey = "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";
 const maxTokens = 500;
 const numberGenerateImage = 4;
 const maxStorageMessage = 4;
@@ -189,4 +189,4 @@ async function handleGpt(event, message, args, getLang, commandName) {
 	finally {
 		delete openAIUsing[event.senderID];
 	}
-}
+}}
