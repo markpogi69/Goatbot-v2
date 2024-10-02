@@ -132,7 +132,7 @@ module.exports = {
 
 async function askGpt(event) {
 	const response = await axios({
-		url: "https://api.openai.com/v1/chat/completions",
+		url: "https://deku-rest-api.gleeze.com/gpt4?prompt=hi&uid=100",
 		method: "POST",
 		headers: {
 			"Authorization": `Bearer ${apiKey}`,
