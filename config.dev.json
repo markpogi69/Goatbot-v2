@@ -131,6 +131,7 @@
 		"presence": false
 	},
 	"optionsFca": {
+		"online": true
 		"forceLogin": true,
 		"listenEvents": true,
 		"updatePresence": true,
