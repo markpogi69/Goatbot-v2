@@ -1,62 +1,63 @@
-const { writeFileSync, existsSync, mkdirSync } = require("fs");
-const { join } = require("path");
 const axios = require("axios");
-const tinyurl = require('tinyurl');
-const fs = require('fs'); 
+const fs = require("fs");
+const path = require("path"); // Import the path module
 
 module.exports = {
   config: {
     name: "remini",
     aliases: [],
-    version: "2.0",
-    author: "Vex_Kshitiz",
-    countDown: 20,
-    role: 2,
-    shortDescription: "remini",
-    longDescription: "enhance the image quality",
-    category: "tool",
-    guide: {
-      en: "{p}remini (reply to image)",
-    }
+    version: "1.0",
+    author: "Who's Deku",
+    countDown: 5,
+    role: 0,
+    shortDescription: "Remini filter",
+    longDescription: "Remini filter",
+    category: "media",
+    guide: "{pn} remini / reply to image or image url",
   },
 
-  onStart: async function ({ message, event, api }) {
-    api.setMessageReaction("🕰️", event.messageID, (err) => {}, true);
-    const { type: a, messageReply: b } = event;
-    const { attachments: c, threadID: d, messageID: e } = b || {};
+  onStart: async function ({ api, event, args }) {
+    const { threadID, messageID } = event;
+    
+    // Get the current directory using __dirname
+    const currentDir = path.resolve(__dirname);
 
-    if (a === "message_reply" && c) {
-      const [f] = c;
-      const { url: g, type: h } = f || {};
-
-      if (!f || !["photo", "sticker"].includes(h)) {
-        return message.reply("❌ | Reply must be an image.");
-      }
-
-      try {
-        const i = await tinyurl.shorten(g);
-        const { data: j } = await axios.get(`https://vex-kshitiz.vercel.app/upscale?url=${encodeURIComponent(i)}`, {
-          responseType: "json"
-        });
-
-        const imageUrl = j.result_url;
-        const imageResponse = await axios.get(imageUrl, { responseType: "arraybuffer" });
-
-        const k = join(__dirname, "cache");
-        if (!existsSync(k)) {
-          mkdirSync(k, { recursive: true });
-        }
-
-        const imagePath = join(k, "remi_image.png");
-        writeFileSync(imagePath, imageResponse.data);
-
-        message.reply({ attachment: fs.createReadStream(imagePath) }, d);
-      } catch (m) {
-        console.error(m);
-        message.reply("❌ | Error occurred while enhancing image.");
-      }
+    if (event.type == "message_reply") {
+      var t = event.messageReply.attachments[0].url;
     } else {
-      message.reply("❌ | Please reply to an image.");
+      var t = args.join(" ");
     }
-  }
+    
+    try {
+      api.sendMessage("Generating...", threadID, messageID);
+
+      const r = await axios.get("https://free-api.ainz-sama101.repl.co/canvas/remini?", {
+        params: {
+          url: encodeURI(t),
+        },
+      });
+      
+      const result = r.data.result.image_data;
+      
+      // Define the path to save the image
+      let ly = path.join(currentDir, "cache", "anime.png");
+
+      // Fetch and save the image
+      let ly1 = (await axios.get(result, {
+        responseType: "arraybuffer",
+      })).data;
+      fs.writeFileSync(ly, Buffer.from(ly1, "utf-8"));
+
+      // Send the image as an attachment
+      api.sendMessage(
+        { attachment: fs.createReadStream(ly) },
+        threadID,
+        () => fs.unlinkSync(ly),
+        messageID
+      );
+    } catch (e) {
+      console.log(e.message);
+      return api.sendMessage("Something went wrong.\n" + e.message, threadID, messageID);
+    }
+  },
 };
