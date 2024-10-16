@@ -31,7 +31,7 @@ module.exports = {
     try {
       api.sendMessage("Generating...", threadID, messageID);
 
-      const r = await axios.get("https://free-api.ainz-sama101.repl.co/canvas/remini?", {
+      const r = await axios.get("https://jonellprojectccapisexplorer.onrender.com/api/remini?imageUrl", {
         params: {
           url: encodeURI(t),
         },
