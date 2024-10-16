@@ -34,7 +34,7 @@ module.exports = {
     });
 
     try {
-      const apiUrl = `https://ccprojectsjonellapis-production.up.railway.app/api/tiktok/searchvideo?keywords=${encodeURIComponent(searchQuery)}`;
+      const apiUrl = `https://deku-rest-apis.ooguy.com/tiktokdl?url=${encodeURIComponent(searchQuery)}`;
 
       const response = await axios.get(apiUrl);
       const videos = response.data.data.videos;
