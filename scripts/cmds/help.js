@@ -3,7 +3,7 @@ const axios = require("axios");
 const path = require("path");
 const { getPrefix } = global.utils;
 const { commands, aliases } = global.GoatBot;
-const doNotDelete = " 🔴 | SHAJI | ⚪";
+const doNotDelete = " SHAJI AI";
 /** 
 * @author NTKhang
 * @author: do not delete it
@@ -12,7 +12,7 @@ const doNotDelete = " 🔴 | SHAJI | ⚪";
 
 module.exports = {
 	config: {
-		name: "Help",
+		name: "help",
 		version: "1.17",
 		author: "Aesther",
 		countDown: 5,
@@ -279,5 +279,4 @@ function cropContent(content, max) {
 		content = content + "...";
 	}
 	return content;
-}
 }
