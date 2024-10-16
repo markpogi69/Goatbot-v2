@@ -1,63 +1,55 @@
-const axios = require("axios");
-const fs = require("fs");
-const path = require("path"); // Import the path module
+const axios = require('axios');
+const fs = require('fs-extra');
 
 module.exports = {
   config: {
-    name: "remini",
+    name: "remini2",
     aliases: [],
-    version: "1.0",
-    author: "Who's Deku",
-    countDown: 5,
+    author: "Hazeyy/kira", // hindi ito collab, ako kasi nag convert :>
+    version: "69",
+    cooldowns: 5,
     role: 0,
-    shortDescription: "Remini filter",
-    longDescription: "Remini filter",
-    category: "media",
-    guide: "{pn} remini / reply to image or image url",
+    shortDescription: {
+      en: "remini filter"
+    },
+    longDescription: {
+      en: "remini filter"
+    },
+    category: "Media 📸",
+    guide: {
+      en: "{p}{n} [reply to an img]"
+    }
   },
 
-  onStart: async function ({ api, event, args }) {
+  onStart: async function ({ api, event }) {
+    const args = event.body.split(/\s+/);
+    args.shift();
+
+    const pathie = __dirname + `/cache/zombie.jpg`;
     const { threadID, messageID } = event;
-    
-    // Get the current directory using __dirname
-    const currentDir = path.resolve(__dirname);
 
-    if (event.type == "message_reply") {
-      var t = event.messageReply.attachments[0].url;
-    } else {
-      var t = args.join(" ");
+    const photoUrl = event.messageReply.attachments[0] ? event.messageReply.attachments[0].url : args.join(" ");
+
+    if (!photoUrl) {
+      api.sendMessage("📸 𝖯𝗅𝖾𝖺𝗌𝖾 𝗋𝖾𝗉𝗅𝗎 𝗍𝗈 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝗉𝗋𝗈𝖼𝖾𝖾𝖽 𝖾𝗇𝗁𝖺𝗇𝖼𝗂𝗇𝗀 𝗂𝗆𝖺𝗀𝖾𝗌.", threadID, messageID);
+      return;
     }
-    
-    try {
-      api.sendMessage("Generating...", threadID, messageID);
 
-      const r = await axios.get("https://jonellprojectccapisexplorer.onrender.com/api/remini?imageUrl", {
-        params: {
-          url: encodeURI(t),
-        },
-      });
-      
-      const result = r.data.result.image_data;
-      
-      // Define the path to save the image
-      let ly = path.join(currentDir, "cache", "anime.png");
+    api.sendMessage("🕟 | 𝖤𝗇𝗁𝖺𝗇𝖼𝗂𝗇𝗀, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍 𝖿𝗈𝗋 𝖺 𝗆𝗈𝗆𝖾𝗇𝗍...", threadID, async () => {
+      try {
+        const response = await axios.get(`https://deku-rest-apis.ooguy.com/remini?q=${encodeURIComponent(photoUrl)}`);
+        const processedImageURL = response.data.image_data;
+        const img = (await axios.get(processedImageURL, { responseType: "arraybuffer" })).data;
 
-      // Fetch and save the image
-      let ly1 = (await axios.get(result, {
-        responseType: "arraybuffer",
-      })).data;
-      fs.writeFileSync(ly, Buffer.from(ly1, "utf-8"));
+        fs.writeFileSync(pathie, Buffer.from(img, 'binary'));
 
-      // Send the image as an attachment
-      api.sendMessage(
-        { attachment: fs.createReadStream(ly) },
-        threadID,
-        () => fs.unlinkSync(ly),
-        messageID
-      );
-    } catch (e) {
-      console.log(e.message);
-      return api.sendMessage("Something went wrong.\n" + e.message, threadID, messageID);
-    }
-  },
+        api.sendMessage({
+          body: "✨ 𝖤𝗇𝗁𝖺𝗇𝖼𝖾𝖉 𝖲𝗎𝖼𝖼𝖾𝗌𝖿𝗎𝗅𝗅𝗒",
+          attachment: fs.createReadStream(pathie)
+        }, threadID, () => fs.unlinkSync(pathie), messageID);
+      } catch (error) {
+        api.sendMessage(`🔴 𝖤𝗋𝗋𝗈𝗋 𝗉𝗋𝗈𝖼𝖾𝗌𝗌𝗂𝗇𝗀 𝗂𝗆𝖺𝗀𝖾: ${error}`, threadID, messageID);
+      }
+    });
+  }
 };
