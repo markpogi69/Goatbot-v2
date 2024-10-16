@@ -12,7 +12,7 @@ const doNotDelete = " 🔴 | SHAJI | ⚪";
 
 module.exports = {
 	config: {
-		name: "help",
+		name: "Help",
 		version: "1.17",
 		author: "Aesther",
 		countDown: 5,
