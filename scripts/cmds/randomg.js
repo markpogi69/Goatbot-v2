@@ -28,7 +28,7 @@ module.exports = {
 
 			console.log('Making API request...');
 
-			const response = await axios.get('https://ccprojectsjonellapis-production.up.railway.app/api/gd/?apikey=umaru852').catch(error => {
+			const response = await axios.get('https://ccprojectsjonellapis-production.up.railway.app/api/gd=').catch(error => {
 				console.error('Error making API request:', error.message);
 				throw error;
 			});
