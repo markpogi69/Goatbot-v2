@@ -13,7 +13,7 @@ module.exports = {
     longDescription: {
       en: "Search for TikTok videos based on keywords."
     },
-    category: "𝗠𝗘𝗗𝗜𝗔",
+    category: "info",
     guide: {
       en: "{pn} <search text>"
     }
@@ -34,7 +34,7 @@ module.exports = {
     });
 
     try {
-      const apiUrl = `https://deku-rest-apis.ooguy.com/tiktokdl?url=${encodeURIComponent(searchQuery)}`;
+      const apiUrl = `https://hiroshi.hiroshiapi.repl.co/tiktok/searchvideo?keywords=${encodeURIComponent(searchQuery)}`;
 
       const response = await axios.get(apiUrl);
       const videos = response.data.data.videos;
@@ -52,7 +52,7 @@ module.exports = {
         videoResponse.data.pipe(writer);
 
         writer.on('finish', async () => {
-
+          
           await api.sendMessage({
             body: message,
             attachment: fs.createReadStream(filePath)
