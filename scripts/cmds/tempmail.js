@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 const EMAIL_API_URL = "https://deku-rest-apis.ooguy.com/tempmail/create";
-const INBOX_API_URL = "https://deku-rest-apis.ooguy.com/tempmail/inbox?email=your_temp_mail";
+const INBOX_API_URL = "https://deku-rest-apis.ooguy.com/tempmail/inbox?email=";
 
 module.exports = {
   config: {
