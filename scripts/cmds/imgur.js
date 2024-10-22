@@ -27,7 +27,7 @@ module.exports = {
 				}
 
 				try {
-						const res = await axios.get(`http://158.101.198.227:8609/imgur2?link=${encodeURIComponent(link2)}`);
+						const res = await axios.get(`https://deku-rest-apis.ooguy.com/others/image/upload?url=${encodeURIComponent(link2)}`);
 						const link = res.data.uploaded.image;
 						return api.sendMessage(`Here is the Imgur link for the image you provided:\n\n${link}`, event.threadID, event.messageID);
 				} catch (error) {
