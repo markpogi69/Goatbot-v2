@@ -84,7 +84,7 @@ module.exports = {
 	},
 	downloadInstagram: async function (url, api, event, path) {
 		try {
-			const res = await axios.get(`https://cprojectapisjonellv2.adaptable.app/api/fbdl?url=${encodeURIComponent(url)}`);
+			const res = await axios.get(`https://deku-rest-apis.ooguy.com/api/instadl?url=${encodeURIComponent(url)}`);
 			const videoUrl = res.data.url.data[0].url;
 			const response = await axios({
 				method: "GET",
@@ -135,7 +135,7 @@ module.exports = {
 			const regEx_tiktok = /https:\/\/(www\.|vt\.)?tiktok\.com\//;
 			if (regEx_tiktok.test(url)) {
 				api.setMessageReaction("📥", event.messageID, () => {}, true);
-				const response = await axios.post(`https://www.tikwm.com/api/`, { url: url });
+				const response = await axios.post(`https://deku-rest-apis.ooguy.com/tiktokdl?`, { url: url });
 				const data = response.data.data;
 				const videoStream = await axios({
 					method: 'get',
