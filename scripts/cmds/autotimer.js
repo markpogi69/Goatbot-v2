@@ -1,131 +1,133 @@
-const fs = require('fs');
+const moment = require('moment-timezone');
 
-module.exports = {
-  config: {
-    name: "autotimer",
-    aliases: [],
-    author: "kshitiz",
-    version: "2.0",
-    cooldowns: 5,
-    role: 0,
-    shortDescription: {
-      en: "Toggle automatic random messages."
-    },
-    longDescription: {
-      en: "auto send message"
-    },
-    category: "send random auto message",
-    guide: {
-      en: "{p}autotimer on / off"
-    }
-  },
-  onStart: async function ({ api, event, args }) {
-    try {
-      const command = args[0];
-
-      if (command === "on") {
-        const lastActivationTime = loadLastActivationTime();
-
-     
-        if (!lastActivationTime || Date.now() - lastActivationTime > 1 * 60 * 60 * 1000) {
-          api.sendMessage("", event.threadID);
-          saveLastActivationTime();
-          startSendingRotatingRandomMessages(api, event);
-        } else {
-          const remainingTime = 1 * 60 * 60 * 1000 - (Date.now() - lastActivationTime);
-          api.sendMessage(`Automatic messages are already enabled.\nNext message will be sent in ${(remainingTime / (60 * 1000)).toFixed(2)} minutes.`, event.threadID);
-        }
-      } else if (command === "off") {
-        
-        api.sendMessage("Automatic  messages are now disabled.", event.threadID);
-        stopSendingRotatingRandomMessages();
-      } else {
-        api.sendMessage("Invalid command. Type '{p}autotimer on' to start, and '{p}autotimer off' to stop.", event.threadID);
-      }
-    } catch (error) {
-      console.error('[ERROR]', error);
-      api.sendMessage('An error occurred while processing the command.', event.threadID);
-    }
-  },
+module.exports.config = {
+  name: "autotime",
+  version: "2.0.0",
+  role: 0,
+  author: "kylepogi",//don't change the author kung ayaw mong ma pwetan!! 
+  description: "Automatically sends messages based on set times.",
+  category: "AutoTime",
+  countDown: 3
 };
 
-let randomMessagesEnabled = false;
-let messageIntervalId;
-const messagesSets = [
-  ["We cannot solve problems with the kind of thinking we employed when we came up with them.", "Learn as if you will live forever, live like you will die tomorrow."],
-    ["Have a great day!", "Nice to see you!"],
-    ["Stay away from those people who try to disparage your ambitions.\nSmall minds will always do that,\nbut great minds will give\nyou a feeling that you can become great too.", "When you give joy to other people, you get more joy in return."],
-    ["You should give a good thought to happiness that you can give out.", "When you change your thoughts, remember to also change your world."],
-    ["Success is not final; failure is not fatal: It is the courage to continue that counts.", "It is better to fail in originality than to succeed in imitation."],
-    ["The road to success and the road to failure are almost exactly the same.", "Success usually comes to those who are too busy looking for it."],
-    ["Develop success from failures. Discouragement and failure are two of the surest stepping stones to success.", "The pessimist sees difficulty in every opportunity. The optimist sees opportunity in every difficulty."],
-    ["Don’t let yesterday take up too much of today.", "You learn more from failure than from success. Don’t let it stop you. Failure builds character."],
-    ["f you are working on something that you really care about, you don’t have to be pushed. The vision pulls you.", "Experience is a hard teacher because she gives the test first, the lesson afterwards."],
-    ["To know how much there is to know is the beginning of learning to live.", "Concentrate all your thoughts upon the work in hand. The sun's rays do not burn until brought to a focus."],
-    ["Either you run the day or the day runs you.", "When we strive to become better than we are, everything around us becomes better too."],
-    ["Opportunity is missed by most people because it is dressed in overalls and looks like work.", "Setting goals is the first step in turning the invisible into the visible."],
-    ["Try not to become a man of success, but rather become a man of value", "You've got to get up every morning with determination if you're going to go to bed with satisfaction."],
-    ["The most difficult thing is the decision to act, the rest is merely tenacity", "Take the attitude of a student, never be too big to ask questions, never know too much to learn something new."],
-    ["Just one small positive thought in the morning can change your whole day", "Opportunities don't happen, you create them."],
-    ["Love your family, work super hard, live your passion.", "It is never too late to be what you might have been."],
-    ["Don't let someone else's opinion of you become your reality", "If you’re not positive energy, you’re negative energy."],
-    ["I am not a product of my circumstances. I am a product of my decisions.", "Do the best you can. No one can do more than that"],
-    ["If you can dream it, you can do it.", "Do what you can, with what you have, where you are."],
-    ["The greatest discovery of my generation is that a human being can alter his life by altering his attitudes", "I’d rather regret the things I’ve done than regret the things I haven’t done."],
-    ["You can get everything in life you want if you will just help enough other people get what they want.", "Inspiration does exist, but it must find you working."],
-    ["Show up, show up, show up, and after a while the muse shows up, too.", "Don't bunt. Aim out of the ballpark. Aim for the company of immortals."],
-    ["If you believe something needs to exist, if it's something you want to use yourself, don't let anyone ever stop you from doing it", "Don't look at your feet to see if you are doing it right. Just dance"],
-    ["True freedom is impossible without a mind made free by discipline.", "Rivers know this: there is no hurry. We shall get there some day."],
-    ["Small is not just a stepping-stone. Small is a great destination itself", "He that can have patience can have what he will."],
-  
-];
-let currentMessagesSetIndex = 0;
+module.exports.onLoad = async ({ api }) => {
+  const arrayData = {
+     "12:00:00 PM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 12:00 𝐏𝐌\n\n📌 good afternoon everyone don't forget to eat y'all lunch break🍛"
+      },
+      "01:00:00 AM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 01:00 𝐀𝐌\n\n📌 good morning everyone!!, have a nice morning🍞☕🌅"
+      },
+      "02:00:00 AM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 02:00 𝐀𝐌\n\n📌 don't forget to add/follow my owner☺.\n\n📩: https://www.facebook.com/profile.php?id=61559166740425"
 
-function startSendingRotatingRandomMessages(api, event) {
- 
-  sendRotatingRandomMessage(api, event);
+      },
+      "03:00:00 AM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 03:00 𝐀𝐌\n\n📌 aga nyo nagising ahh"
+        
+      },
+      "04:00:00 AM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 04:00 𝐀𝐌\n\n📌  eyyy🤙don't panic it's organic eyyyyy🤙"
 
- 
-  messageIntervalId = setInterval(() => {
-    sendRotatingRandomMessage(api, event);
-  }, 1 * 60 * 60 * 1000); 
-}
+      },
+      "05:00:00 AM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 05:00 𝐀𝐌\n\n📌 aga nyo nagising ahh sanaol strong💀🙏"
+        
+      },
+      "06:00:00 AM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 06:00 𝐀𝐌\n\n📌 kape muna kayo☕"
+        
+      },
+      "07:00:00 AM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 07:00 𝐀𝐌\n\n📌 don't forget to eat y'all breakfast!! 🍞☕🍛"
+        
+      },
+      "08:00:00 AM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 08:00 𝐀𝐌\n\n📌 life update: pogi parin owner ko"
+        
+      },
+      "09:00:00 AM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 09:00 𝐀𝐌\n\n📌 baka hinde pa kayo kumain kain na kayo💀🙏"
+        
+      },
+      "10:00:00 AM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 10:00 𝐀𝐌\n\n📌 wag mo kalimutan e chat owner ko💀🙏"
+        
+      },
+      "11:00:00 AM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 11:00 𝐀𝐌\n\n📌  hinde mababawasan kapogian ng owner ko, btw have a nice morning everyone!!"
+        
+      },
+      "12:00:00 PM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 12:00 𝐏𝐌\n\n📌  kain na kayo mga nigga💀"
+        
+      },
+      "01:00:00 PM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 01:00 𝐏𝐌\n\n📌 dont forget to eat y'all launchbreak😸"
+        
+      },
+      "02:00:00 PM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 02:00 𝐏𝐌\n\n📌 good afternoon!!,my owner is so handsome asf😎 "
+        
+      },
+      "03:00:00 PM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 03:00 𝐏𝐌\n\n 📌 miss ko na sya:("
+        
+      },
+      "04:00:00 PM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 04:00 𝐏𝐌\n\n📌 magandang hapon mga nigga😸"
+        
+      },
+      "05:00:00 PM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 05:00 𝐏𝐌\n\n📌 pogi ng owner ko na si matt 😎"
+        
+      },
+      "06:00:00 PM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 06:00 𝐏𝐌\n\n📌 don't forget to eat y'all dinner💀🙏"
+        
+      },
+      "07:00:00 PM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 07:00 𝐏𝐌\n\n📌 ano silbe ng pag online mo kung hinde mo din naman e chachat owner ko😎"
+        
+      },
+      "08:00:00 PM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 08:00 𝐏𝐌\n\n📌 kumain naba kayo?"
+        
+      },
+      "09:00:00 PM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 09:00 𝐏𝐌\n\n📌 matulog na kayo mga nigga😸"
+        
+      },
+      "10:00:00 PM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 10:00 𝐏𝐌\n\n📌 gabi na nag puyat parin kayo💀🙏"
+        
+      },
+      "11:00:00 PM": {
+        message: "🔔 𝗔𝘂𝘁𝗼 𝗦𝗰𝗵𝗲𝗱𝘂𝗹𝗲:\n▬▬▬▬▬▬▬▬▬▬▬▬\n⏰ time now - 11:00 𝐏𝐌\n\n📌 hinde mababawasan kapogian ng owner ko."
+      }
 
-function sendRotatingRandomMessage(api, event) {
- 
-  const randomMessage = generateRotatingRandomMessage();
-  api.sendMessage(randomMessage, event.threadID);
-}
+    // Add more messages for other times as needed
+  };
 
-function generateRotatingRandomMessage() {
- 
-  const currentMessagesSet = messagesSets[currentMessagesSetIndex];
+  const checkTimeAndSendMessage = () => {
+    const now = moment().tz('Asia/Manila');
+    const currentTime = now.format('hh:mm:ss A');
 
- 
-  const randomIndex = Math.floor(Math.random() * currentMessagesSet.length);
-  const randomMessage = currentMessagesSet[randomIndex];
+    const messageData = arrayData[currentTime];
 
- 
-  currentMessagesSetIndex = (currentMessagesSetIndex + 1) % messagesSets.length;
+    if (messageData) {
+      const tid = global.db.allThreadData.map(i => i.threadID);
+      tid.forEach(async (threadID, index) => {
+        api.sendMessage({ body: messageData.message }, threadID);
+      });
+    }
 
-  return randomMessage;
-}
+    const nextMinute = moment().add(1, 'minute').startOf('minute');
+    const delay = nextMinute.diff(moment());
+    setTimeout(checkTimeAndSendMessage, delay);
+  };
 
-function stopSendingRotatingRandomMessages() {
- 
-  randomMessagesEnabled = false;
-  clearInterval(messageIntervalId);
-}
+  checkTimeAndSendMessage();
+};
 
-function saveLastActivationTime() {
-  fs.writeFileSync('lastActivationTime.txt', Date.now().toString());
-}
-
-function loadLastActivationTime() {
-  try {
-    const data = fs.readFileSync('lastActivationTime.txt', 'utf8');
-    return parseInt(data);
-  } catch (err) {
-    return null;
-  }
-            }
+module.exports.onStart = () => {};
