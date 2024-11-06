@@ -12,13 +12,13 @@
 	"antiInbox": false,
 	"language": "en",
 	"notesLanguage": "change to your language with ISO 639-1 code, available languages: vi (Vietnamese), en (English)",
-	"nickNameBot": "[ - ] RAIDEN",
-	"prefix": "-",
+	"nickNameBot": "NAME UR BOT",
+	"prefix": "PREFIX OF UR BOT",
 	"adminOnly": {
 		"enable": false,
 		"ignoreCommand": []
 	},
-	"adminBot": [61559166740425],
+	"adminBot": [UR UID],
 	"whiteListMode": {
 		"enable": false,
 		"whiteListIds": [],
