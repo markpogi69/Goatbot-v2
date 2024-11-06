@@ -1,1 +1,128 @@
-[PUT UR APPSTATE HERE]
+[
+    {
+        "key": "dbln",
+        "value": "%7B%2261567255171286%22%3A%22tHKWyN32%22%2C%22100054699990380%22%3A%22nPKZ8nDY%22%2C%2261567876672558%22%3A%22rWwAJbkZ%22%2C%2261566510073010%22%3A%22lu5G7rYR%22%2C%2261568081937232%22%3A%22nBTgoTvz%22%2C%2261567383106270%22%3A%229LnBmEuf%22%2C%2261567185849789%22%3A%22tPmALRhY%22%7D",
+        "domain": "facebook.com",
+        "path": "/login/device-based/",
+        "hostOnly": false,
+        "creation": "2024-11-06T11:41:56.626Z",
+        "lastAccessed": "2024-11-06T11:41:56.626Z"
+    },
+    {
+        "key": "sb",
+        "value": "zlYRZ4EzCKwN4pNNbY2uv4UQ",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2024-11-06T11:41:56.626Z",
+        "lastAccessed": "2024-11-06T11:41:56.626Z"
+    },
+    {
+        "key": "ps_l",
+        "value": "1",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2024-11-06T11:41:56.626Z",
+        "lastAccessed": "2024-11-06T11:41:56.626Z"
+    },
+    {
+        "key": "ps_n",
+        "value": "1",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2024-11-06T11:41:56.626Z",
+        "lastAccessed": "2024-11-06T11:41:56.626Z"
+    },
+    {
+        "key": "vpd",
+        "value": "v1%3B670x360x2",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2024-11-06T11:41:56.626Z",
+        "lastAccessed": "2024-11-06T11:41:56.626Z"
+    },
+    {
+        "key": "datr",
+        "value": "qNwgZ3n7pUBHBN6TwWGy1Y4d",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2024-11-06T11:41:56.626Z",
+        "lastAccessed": "2024-11-06T11:41:56.626Z"
+    },
+    {
+        "key": "locale",
+        "value": "en_US",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2024-11-06T11:41:56.626Z",
+        "lastAccessed": "2024-11-06T11:41:56.626Z"
+    },
+    {
+        "key": "m_pixel_ratio",
+        "value": "2",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2024-11-06T11:41:56.626Z",
+        "lastAccessed": "2024-11-06T11:41:56.626Z"
+    },
+    {
+        "key": "wd",
+        "value": "360x670",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2024-11-06T11:41:56.626Z",
+        "lastAccessed": "2024-11-06T11:41:56.626Z"
+    },
+    {
+        "key": "c_user",
+        "value": "61567185849789",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2024-11-06T11:41:56.626Z",
+        "lastAccessed": "2024-11-06T11:41:56.626Z"
+    },
+    {
+        "key": "fr",
+        "value": "1RetzeJ1ZCzNxf6iW.AWXjm9e_yyhu8iqMOVxX0GIWDsg.BnIlRh..AAA.0.0.BnK1X-.AWXm4kUurpk",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2024-11-06T11:41:56.626Z",
+        "lastAccessed": "2024-11-06T11:41:56.626Z"
+    },
+    {
+        "key": "xs",
+        "value": "35%3AmrkTIZK4W_w_cQ%3A2%3A1730893310%3A-1%3A-1",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2024-11-06T11:41:56.626Z",
+        "lastAccessed": "2024-11-06T11:41:56.626Z"
+    },
+    {
+        "key": "fbl_st",
+        "value": "101421921%3BT%3A28848221",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2024-11-06T11:41:56.626Z",
+        "lastAccessed": "2024-11-06T11:41:56.626Z"
+    },
+    {
+        "key": "wl_cbv",
+        "value": "v2%3Bclient_version%3A2664%3Btimestamp%3A1730893313",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2024-11-06T11:41:56.626Z",
+        "lastAccessed": "2024-11-06T11:41:56.626Z"
+    }
+]
