@@ -60,8 +60,8 @@ module.exports = {
   langs: {
     en: {
       final: "",
-      header: " 🪐 | YUKI AI \n━━━━━━━━━━━━━━━━",
-      footer: "•━━━━━━━━(•~•)━━━━━━━•",
+      header: "",
+      footer: "",
     }
   },
 
@@ -96,7 +96,7 @@ module.exports = {
       }
 
       if (prompt === 'hello') {
-        const greetingMessage = `${getLang("header")}\nHello! How can I assist you today?\n${getLang("footer")}`;
+        const greetingMessage = `${getLang("header")}\nHello how can i help you?\n${getLang("footer")}`;
         api.sendMessage(greetingMessage, event.threadID, event.messageID);
         console.log('Sent greeting message as a reply to user');
         return;
