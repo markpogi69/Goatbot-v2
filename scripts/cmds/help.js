@@ -34,7 +34,7 @@ module.exports = {
 			const categories = {};
 			let msg = "";
 
-			msg += `╔══════════════╗\n COMMAND LIST   \n╚══════════════╝`;
+			msg += `╔══════════════╗\n 🔴COMMAND LIST🟢 \n╚══════════════╝`;
 
 			for (const [name, value] of commands) {
 					if (value.config.role > 1 && role < value.config.role) continue;
@@ -65,7 +65,7 @@ module.exports = {
 
 
 			const helpListImages = [
-				"https://i.imgur.com/8d6WbRJ.gif"
+				"https://i.ibb.co/ZYfd0gH/xva213.gif"
 			];
 
 
