@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 const services = [
-  { url: 'https://gpt-four.vercel.app/gpt', param: { prompt: 'prompt' }, isCustom: true }
+  { url: 'https://markdevs69v2.onrender.com/new/v2/gpt4?', param: { ask: 'ask' }, isCustom: true }
 ];
 
 async function callService(service, prompt, senderID) {
