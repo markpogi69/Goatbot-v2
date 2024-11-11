@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 const services = [
-  { url: 'https://markdevs69v2.onrender.com/new/v2/gpt4', param: { ask: 'ask' }, isCustom: true }
+  { url: 'https://hung-rest.vercel.app/api/openai', param: { prompt: 'prompt' }, isCustom: true }
 ];
 
 async function callService(service, prompt, senderID) {
