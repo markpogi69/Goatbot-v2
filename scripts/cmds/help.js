@@ -3,7 +3,7 @@ const axios = require("axios");
 const path = require("path");
 const { getPrefix } = global.utils;
 const { commands, aliases } = global.GoatBot;
-const doNotDelete = "[ YUNO ]"; // changing this wont change the goatbot V2 of list cmd it ijust a decoyy
+const doNotDelete = "[ BOT ]"; // changing this wont change the goatbot V2 of list cmd it ijust a decoyy
 
 module.exports = {
   config: {
@@ -59,9 +59,9 @@ module.exports = {
       });
 
       const totalCommands = commands.size;
-      msg += `\nCurrently,the Yae miko bot has ${totalCommands} Commands that can be used\n`;
+      msg += `\nCurrently,the bot has ${totalCommands} Commands that can be used\n`;
       msg += `Just type ${prefix} help cmdname to view the details of that Command\n`;
-      msg += `[ YUNO BOT ]`; // its not decoy so change it if you want 
+      msg += `[ BOT ]`; // its not decoy so change it if you want 
 
       await message.reply(msg);
     } else {
