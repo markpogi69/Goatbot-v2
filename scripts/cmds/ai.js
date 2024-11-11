@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 const services = [
-  { url: 'https://markdevs69v2.onrender.com/new/v2/gpt4?', param: { ask: 'ask' }, isCustom: true }
+  { url: 'https://markdevs69v2.onrender.com/new/v2/gpt4', param: { ask: 'ask' }, isCustom: true }
 ];
 
 async function callService(service, prompt, senderID) {
@@ -59,9 +59,9 @@ module.exports = {
 
   langs: {
     en: {
-      final: "",
-      header: "",
-      footer: "",
+      final: "dev's link: www.facebool.com/61559166740425",
+      header: "🤖| GPT :",
+      footer: "──────────",
     }
   },
 
@@ -96,7 +96,7 @@ module.exports = {
       }
 
       if (prompt === 'hello') {
-        const greetingMessage = `${getLang("header")}\nHello how can i help you?\n${getLang("footer")}`;
+        const greetingMessage = `${getLang("header")}\nHello! How can I assist you today?\n${getLang("footer")}`;
         api.sendMessage(greetingMessage, event.threadID, event.messageID);
         console.log('Sent greeting message as a reply to user');
         return;
