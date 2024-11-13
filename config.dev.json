@@ -4,7 +4,7 @@
 		"password": "",
 		"2FASecret": "",
 		"i_user": "",
-		"proxy": 8080,
+		"proxy": null,
 		"userAgent": "Mozilla/5.0 (Linux; Android 12; M2102J20SG) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.0.0 Mobile Safari/537.36",
 		"intervalGetNewCookie": null,
 		"notes": "time the system automatically retrieves new cookies from email/password, unit is minute, if you set null, the system will not automatically retrieve new cookies, it saves you from having to manually change your cookie every time it expires. recommended set to 1440 (1day) or 4320 (3day).TO BE ABLE TO USE THIS FEATURE YOU NEED TO ENTER THE ACCOUNT PASSWORD ABOVE"
@@ -31,7 +31,7 @@
 		"how_it_work": "if you enable both whiteListMode and whiteListModeThread, the system will check if the user is in whiteListIds, then check if the thread is in whiteListThreadIds, if one of the conditions is true, the user can use the bot"
 	},
 	"database": {
-		"type": "json",
+		"type": "sqlite",
 		"uriMongodb": "",
 		"autoSyncWhenStart": true,
 		"autoRefreshThreadInfoFirstTime": true,
@@ -111,7 +111,7 @@
 		}
 	},
 	"hideNotiMessage": {
-		"commandNotFound": true,
+		"commandNotFound": false,
 		"adminOnly": false,
 		"threadBanned": false,
 		"userBanned": false,
@@ -131,13 +131,12 @@
 		"presence": false
 	},
 	"optionsFca": {
-		"online": true,
 		"forceLogin": true,
 		"listenEvents": true,
 		"updatePresence": true,
 		"listenTyping": true,
 		"logLevel": "silent",
-		"selfListen": false,
+		"selfListen": true,
 		"selfListenEvent": true,
 		"autoMarkDelivery": true,
 		"autoReconnect": true,
