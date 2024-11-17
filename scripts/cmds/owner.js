@@ -25,7 +25,7 @@ module.exports = {
 				bio: 'idk'
 			};
 
-			const bold = 'https://i.imgur.com/SyBjkss.mp4';
+			const bold = 'https://i.imgur.com/v3hrELm.mp4';
 			const tmpFolderPath = path.join(__dirname, 'tmp');
 
 			if (!fs.existsSync(tmpFolderPath)) {
