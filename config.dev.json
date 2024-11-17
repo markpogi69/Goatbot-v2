@@ -12,13 +12,13 @@
 	"antiInbox": false,
 	"language": "en",
 	"notesLanguage": "change to your language with ISO 639-1 code, available languages: vi (Vietnamese), en (English)",
-	"nickNameBot": "[ / ] Zora Ideale",
+	"nickNameBot": "[ / ] GOATBOT",
 	"prefix": "/",
 	"adminOnly": {
 		"enable": false,
 		"ignoreCommand": []
 	},
-	"adminBot": ["61559166740425","61562685015112"],
+	"adminBot": ["61559166740425","61553996824599"],
 	"whiteListMode": {
 		"enable": false,
 		"whiteListIds": [],
