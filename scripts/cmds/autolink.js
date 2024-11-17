@@ -133,7 +133,7 @@ module.exports = {
       if (url.includes("instagram")) {
         axios({
           method: "GET",
-          url: `https://public-apis-project86.vercel.app/api/insta?url=${encodeURIComponent(url)}`
+          url: `https://joshweb.click/api/instadl?url=${encodeURIComponent(url)}`
         })
         .then(res => {
           console.log(`API Response: ${JSON.stringify(res.data)}`);
@@ -164,10 +164,10 @@ module.exports = {
   },
   queryTikTok: async function (url) {
     try {
-      const res = await axios.get("https://ssstik.io/en");
+      const res = await axios.get("https://joshweb.click/tiktokdl");
       const s_tt = res.data.split('s_tt = ')[1].split(',')[0];
       const { data: result } = await axios({
-        url: "https://ssstik.io/abc?url=dl",
+        url: "https://joshweb.click/tiktokdl?url=${encodeURIComponent(url)}",
         method: "POST",
         data: qs.stringify({
           id: url,
@@ -240,7 +240,7 @@ async function fbDownloader(url) {
   try {
     const response1 = await axios({
       method: 'POST',
-      url: 'https://snapsave.app/action.php?lang=vn',
+      url: 'https://joshweb.click/facebook?url=${encodeURIComponent(url)}',
       headers: {
         "accept": "*/*",
         "accept-language": "vi,en-US;q=0.9,en;q=0.8",
