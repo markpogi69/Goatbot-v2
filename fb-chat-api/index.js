@@ -104,22 +104,37 @@ function buildAPI(globalOptions, html, jar) {
 
 
 	const oldFBMQTTMatch = html.match(/irisSeqID:"(.+?)",appID:219994525426954,endpoint:"(.+?)"/);
-	let mqttEndpoint, region, fb_dtsg, irisSeqID;
-				try {
-					 const endpointMatch = html.match(/"endpoint":"([^"]+)"/);
-					 if (endpointMatch) {
-							 mqttEndpoint = endpointMatch[1].replace(/\\\//g, '/');
-							 const url = new URL(mqttEndpoint);
-							 region = url.searchParams.get('region')?.toUpperCase() || "PRN";
-						}
-						log.info('login', `Sever region ${region}`);
-				 } catch (e) {
-						log.warning('login', 'Not MQTT endpoint');
-				 }
-				 const tokenMatch = html.match(/DTSGInitialData.*?token":"(.*?)"/);
-				 if (tokenMatch) {
-						fb_dtsg = tokenMatch[1];
-				 }
+	let mqttEndpoint = null;
+	let region = null;
+	let irisSeqID = null;
+	let noMqttData = null;
+
+	if (oldFBMQTTMatch) {
+		irisSeqID = oldFBMQTTMatch[1];
+		mqttEndpoint = oldFBMQTTMatch[2];
+		region = new URL(mqttEndpoint).searchParams.get("region").toUpperCase();
+		log.info("login", `Got this account's message region: ${region}`);
+	} else {
+		const newFBMQTTMatch = html.match(/{"app_id":"219994525426954","endpoint":"(.+?)","iris_seq_id":"(.+?)"}/);
+		if (newFBMQTTMatch) {
+			irisSeqID = newFBMQTTMatch[2];
+			mqttEndpoint = newFBMQTTMatch[1].replace(/\\\//g, "/");
+			region = new URL(mqttEndpoint).searchParams.get("region").toUpperCase();
+			log.info("login", `Got this account's message region: ${region}`);
+		} else {
+			const legacyFBMQTTMatch = html.match(/(\["MqttWebConfig",\[\],{fbid:")(.+?)(",appID:219994525426954,endpoint:")(.+?)(",pollingEndpoint:")(.+?)(3790])/);
+			if (legacyFBMQTTMatch) {
+				mqttEndpoint = legacyFBMQTTMatch[4];
+				region = new URL(mqttEndpoint).searchParams.get("region").toUpperCase();
+				log.warn("login", `Cannot get sequence ID with new RegExp. Fallback to old RegExp (without seqID)...`);
+				log.info("login", `Got this account's message region: ${region}`);
+				log.info("login", `[Unused] Polling endpoint: ${legacyFBMQTTMatch[6]}`);
+			} else {
+				log.warn("login", "Cannot get MQTT region & sequence ID.");
+				noMqttData = html;
+			}
+		}
+	}
 
 	// All data available to api functions
 	const ctx = {
@@ -135,12 +150,8 @@ function buildAPI(globalOptions, html, jar) {
 		lastSeqId: irisSeqID,
 		syncToken: undefined,
 		mqttEndpoint,
-		wsReqNumber: 0,
-    wsTaskNumber: 0,
-		reqCallbacks: {},
 		region,
-		firstListen: true,
-		fb_dtsg
+		firstListen: true
 	};
 
 	const api = {
@@ -152,10 +163,75 @@ function buildAPI(globalOptions, html, jar) {
 		}
 	};
 
+	if (noMqttData) {
+		api["htmlData"] = noMqttData;
+	}
+
+	const apiFuncNames = [
+		'addExternalModule',
+		'addUserToGroup',
+		'changeAdminStatus',
+		'changeArchivedStatus',
+		'changeAvatar',
+		'changeBio',
+		'changeBlockedStatus',
+		'changeGroupImage',
+		'changeNickname',
+		'changeThreadColor',
+		'changeThreadEmoji',
+		'createNewGroup',
+		'createPoll',
+		'deleteMessage',
+		'deleteThread',
+		'forwardAttachment',
+		'getCurrentUserID',
+		'getEmojiUrl',
+		'getFriendsList',
+		'getMessage',
+		'getThreadHistory',
+		'getThreadInfo',
+		'getThreadList',
+		'getThreadPictures',
+		'getUserID',
+		'getUserInfo',
+		'handleMessageRequest',
+		'listenMqtt',
+		'logout',
+		'markAsDelivered',
+		'markAsRead',
+		'markAsReadAll',
+		'markAsSeen',
+		'muteThread',
+		'refreshFb_dtsg',
+		'removeUserFromGroup',
+		'resolvePhotoUrl',
+		'searchForThread',
+		'sendMessage',
+		'sendTypingIndicator',
+		'setMessageReaction',
+		'setPostReaction',
+		'setTitle',
+		'threadColors',
+		'unsendMessage',
+		'unfriend',
+
+		// HTTP
+		'httpGet',
+		'httpPost',
+		'httpPostFormData',
+
+		'uploadAttachment'
+	];
+
 	const defaultFuncs = utils.makeDefaults(html, i_userID || userID, ctx);
-	require('fs').readdirSync(__dirname + '/src/').filter((v) => v.endsWith('.js')).map(function (v) {
-						api[v.replace('.js', '')] = require('./src/' + v)(defaultFuncs, api, ctx);
-				});
+
+	// Load all api functions in a loop
+	apiFuncNames.map(function (v) {
+		api[v] = require('./src/' + v)(defaultFuncs, api, ctx);
+	});
+
+	//Removing original `listen` that uses pull.
+	//Map it to listenMqtt instead for backward compatibly.
 	api.listen = api.listenMqtt;
 
 	return [ctx, defaultFuncs, api];
@@ -283,7 +359,7 @@ function login(loginData, options, callback) {
 		logRecordSize: defaultLogRecordSize,
 		online: true,
 		emitReady: false,
-		userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+		userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/600.3.18 (KHTML, like Gecko) Version/8.0.3 Safari/600.3.18"
 	};
 
 	setOptions(globalOptions, options);
