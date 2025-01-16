@@ -4,10 +4,10 @@ const request = require("request");
 
 module.exports = {
   config: {
-    name: "shoti2",
+    name: "shoti",
     description: "Fetch a short video from Shoti",
     category: "fun",
-    author: "AceGerome",
+    author: "Markytot",
   },
 
   onStart: async function ({ message, api, event }) {
