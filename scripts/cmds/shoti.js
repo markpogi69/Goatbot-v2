@@ -6,7 +6,7 @@ module.exports = {
   config: {
     name: "shoti",
     description: "Fetch a short video from Shoti",
-    category: "fun",
+    category: "media",
     author: "Markytot",
   },
 
